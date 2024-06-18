@@ -1,0 +1,7 @@
+protoc --go_out=. --go-grpc_out=. pubsub.proto
+"awesomeProject/pb"
+
+if topic == "stator" {
+}
+if topic == "mover" {
+}

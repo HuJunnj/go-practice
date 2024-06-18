@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package pubsub;
+option go_package = "./pb";
+
+service PubSubService {
+  rpc Subscribe (SubscribeRequest) returns (stream SubscribeResponse);
+  rpc Unsubscribe (UnsubscribeRequest) returns (UnsubscribeResponse);
+}
+
+message SubscribeRequest {
+  string topic = 1;
+}
+
+message SubscribeResponse {
+  Message message = 1;
+}
+
+message UnsubscribeRequest {
+  string topic = 1;
+}
+
+message UnsubscribeResponse {
+  string message = 1;
+}
+
+message Message {
+  int32 id = 1;
+  string content = 2;
+  string timestamp = 3;
+}
+
