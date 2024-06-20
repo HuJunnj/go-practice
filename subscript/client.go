@@ -1,4 +1,4 @@
-package main
+package subscript
 
 import (
 	pb "awesomeProject/pb" // Update with your actual package path
@@ -21,7 +21,6 @@ func subscribe(client pb.PubSubServiceClient, topic string) {
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-
 	stream, err := client.Subscribe(ctx, &pb.SubscribeRequest{Topic: topic})
 	GetPubSubClient().cancels[topic] = cancel
 	if err != nil {
@@ -34,17 +33,11 @@ func subscribe(client pb.PubSubServiceClient, topic string) {
 			break
 		}
 		if err != nil {
-			log.Fatalf("failed to receive message: %v", err)
 			break
 		}
 		if resp == nil {
 			break
 		}
-		log.Printf("Received message: ID=%d, Content=%s, Timestamp=%s",
-			resp.GetMessage().GetId(),
-			resp.GetMessage().GetContent(),
-			resp.GetMessage().GetTimestamp(),
-		)
 	}
 }
 
@@ -52,12 +45,12 @@ func Subscript() {
 
 	// 启动协程
 
-	subscribe(GetPubSubClient().client, "mover")
+	go subscribe(GetPubSubClient().client, "mover")
 	//go subscribe(GetPubSubClient().client, "mover")
 	//go subscribe(client, "stator")
 	//go subscribe(client, "mover")
 	// Simulate some other work
-
+	// 等待一段时间，模拟服务端流接收
 	//unsubscribes(client, "example")
 	// 获取并取消订阅 "stator"
 
@@ -66,6 +59,7 @@ func UnSubcript() {
 	cancelFunc := instance.cancels["mover"]
 	if cancelFunc != nil {
 		cancelFunc()
+		delete(instance.cancels, "mover")
 		fmt.Println("Subscription 'stator' cancelled")
 	} else {
 		fmt.Println("Cancel function for 'stator' is nil")

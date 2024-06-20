@@ -38,7 +38,7 @@ func (s *server) Subscribe(req *pb.SubscribeRequest, stream pb.PubSubService_Sub
 		s.mu.Unlock()
 	}()
 	if topic == "stator" {
-		for i := 0; i < 100; i++ { // Simulate sending multiple messages
+		for i := 0; i < 10000000000; i++ { // Simulate sending multiple messages
 			select {
 			case <-ctx.Done():
 				log.Printf("Subscription to topic %s canceled", topic)
@@ -55,12 +55,12 @@ func (s *server) Subscribe(req *pb.SubscribeRequest, stream pb.PubSubService_Sub
 				if err := stream.Send(response); err != nil {
 					return err
 				}
-				time.Sleep(1 * time.Second) // Simulate delay
+				time.Sleep(20 * time.Millisecond) // Simulate delay
 			}
 		}
 	}
 	if topic == "mover" {
-		for i := 0; i < 100; i++ { // Simulate sending multiple messages
+		for i := 0; i < 100000000; i++ { // Simulate sending multiple messages
 			select {
 			case <-ctx.Done():
 				log.Printf("Subscription to topic %s canceled", topic)
@@ -77,7 +77,7 @@ func (s *server) Subscribe(req *pb.SubscribeRequest, stream pb.PubSubService_Sub
 				if err := stream.Send(response); err != nil {
 					return err
 				}
-				time.Sleep(1 * time.Second) // Simulate delay
+				time.Sleep(20 * time.Millisecond) // Simulate delay
 			}
 		}
 	}
