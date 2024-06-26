@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gorilla/websocket"
 	"net/http"
+	"sync"
 	"time"
 )
 
@@ -24,6 +25,8 @@ func main() {
 		fmt.Println("监听错误:", err)
 	}
 }
+
+var writeMutex sync.Mutex
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
 	// 将 HTTP 连接升级为 WebSocket 连接
@@ -64,7 +67,9 @@ func handleMessage(conn *websocket.Conn, messageType int, response string) {
 	for {
 		time.Sleep(20 * time.Millisecond)
 		// 将消息回发给客户端
+		writeMutex.Lock()
 		err := conn.WriteMessage(messageType, []byte(response))
+		writeMutex.Unlock()
 		if err != nil {
 			// 检测到写入错误（如连接关闭），退出循环
 			fmt.Println("发送消息时出错:", err)
