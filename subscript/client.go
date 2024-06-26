@@ -13,8 +13,6 @@ import (
 
 func subscribe(client pb.PubSubServiceClient, topic string) {
 
-	//fmt.Println(GetPubSubClient().cancels[topic])
-	// 使用逗号 ok 习惯用法
 	if _, ok := GetPubSubClient().cancels[topic]; ok {
 		fmt.Println(topic + "该主题已被其他客户端订阅")
 		return
@@ -33,6 +31,7 @@ func subscribe(client pb.PubSubServiceClient, topic string) {
 			break
 		}
 		if err != nil {
+			fmt.Println("fadsfads")
 			break
 		}
 		if resp == nil {
@@ -46,13 +45,6 @@ func Subscript() {
 	// 启动协程
 
 	go subscribe(GetPubSubClient().client, "mover")
-	//go subscribe(GetPubSubClient().client, "mover")
-	//go subscribe(client, "stator")
-	//go subscribe(client, "mover")
-	// Simulate some other work
-	// 等待一段时间，模拟服务端流接收
-	//unsubscribes(client, "example")
-	// 获取并取消订阅 "stator"
 
 }
 func UnSubcript() {
